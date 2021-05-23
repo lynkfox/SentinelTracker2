@@ -53,7 +53,27 @@ class Tracker(cdk.Stack):
         # APIs                         #
         ################################
         
-        api.LambdaRestApi(
+        tracker_api = api.LambdaRestApi(
             self, 'TrackerEndpoint',
             handler=entity_lambda,
+            proxy=True,
+            
         )
+        
+        tracker_resource = tracker_api.root.add_resource("entity")
+        tracker_resource.add_method("GET", api_key_required=True)
+        
+        api_usage_plan = tracker_api.add_usage_plan(
+            "TrackerUsagePlan",
+            name="TrackerUsagePlan",
+            throttle={
+                "rate_limit": 10,
+                "burst_limit": 3
+            }
+        )
+        
+        api_key = tracker_api.add_api_key("TrackerKey")
+        api_usage_plan.add_api_key(api_key)
+        
+        
+        
