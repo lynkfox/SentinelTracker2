@@ -5,6 +5,7 @@ def create_base_response():
         "isBase64Encoded": True,
         "statusCode": "200",
         "headers": { 
-            "x-clacks-overhead": "GNU-TerryPratchet",
-            'Content-Type': 'application/json'}
+            "X-Clacks-Overhead": "GNU Terry Pratchett",
+            "Content-Type": "application/json"
+            }
         } 
