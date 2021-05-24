@@ -14,8 +14,8 @@ def entity_lambda_handler(event: dict, context: dict) -> dict:
 
     Path format
 
-    entity_type/entity_name/game_type/outcome
-    entity_type/entity_name/vs/second_entity_name/game_type/outcome
+    /entity_type/entity_name/game_type/outcome
+    /entity_type/entity_name/vs/second_entity_name/game_type/outcome
 
     '''
     response = create_base_response()
@@ -47,8 +47,9 @@ def entity_lambda_handler(event: dict, context: dict) -> dict:
             "path": event['path']
         })
     else:
-        logger.info(f"[entity_lambda_handler] - Initalizing Search for {path[1]}.")
-        entity = EntityCommands(ENTITY_TABLE, path[1])
+        # TODO: Add check for path[1] == entity/hero/villain/environment/gametype/box
+        logger.info(f"[entity_lambda_handler] - Initalizing Search for {path[2]}.")
+        entity = EntityCommands(ENTITY_TABLE, path[2])
         response['body'] = json.dumps(entity.entity_data)
 
     return response
