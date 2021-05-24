@@ -11,6 +11,7 @@ class EntityCommands():
         self.ddb = boto3.resource('dynamodb')
         self.entity_table = self.ddb.Table(table_name)
         self.entity_name = entity
+        self.entity_data = {}
     
     def get_all_entity_data(self) -> dict:
         '''
@@ -24,16 +25,16 @@ class EntityCommands():
             KeyConditionExpression=Key('pk').eq(f'ENTITY#{self.entity_name}')
         )['Items']
         
-        entity_data = self.get_meta_data(entity_items[0])
+        self.entity_data = self.get_meta_data(entity_items[0])
         
     def get_meta_data(self, meta_data:dict) -> dict:
         
-        return {
+        self.entity_data.update({
             'display_name': meta_data.get('display_name'),
             'entity_source': meta_data.get('entity_source'),
             'total_wins': int(meta_data.get('total_wins')),
             'total_losses': int(meta_data.get('total_losses'))
-        }
+        })
         
         
         
