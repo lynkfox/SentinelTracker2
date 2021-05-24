@@ -37,7 +37,7 @@ def create_testing_table(client, table_name, entity_name):
                 'S': f'#META#{entity_name}'
             },
             'display_name': {
-                'S': 'Baron Blade'
+                'S': string.capwords(entity_name.replace('_', ' '))
             },
             'entity_source': {
                 'S': f'ENTITY#{entity_name}'

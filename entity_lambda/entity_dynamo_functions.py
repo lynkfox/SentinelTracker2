@@ -2,6 +2,7 @@ import boto3
 import json
 from botocore.exceptions import ClientError
 from boto3.dynamodb.conditions import Key
+from decimal import *
 import logging
 
 class EntityCommands():
@@ -42,7 +43,9 @@ class EntityCommands():
         for key in meta_data:
             if key == 'pk' or key == 'sk':
                 continue
-            else:
+            elif isinstance(meta_data[key], Decimal):
+                self.entity_data.update({ key: int(meta_data[key])})
+            else:  
                 self.entity_data.update({ key: meta_data[key] })
         
         

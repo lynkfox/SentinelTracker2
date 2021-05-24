@@ -20,7 +20,7 @@ def aws_credentials():
 
 @pytest.fixture
 def lambda_env_variables():
-    os.environ['TRACKER_DYNAMO'] = 'Test'
+    os.environ['TRACKER_DYNAMO'] = 'test_table'
 
     yield
 
@@ -86,8 +86,8 @@ class TestEntityLambda_End_to_End():
         del self.client
 
     def test_lambda_handler_end_to_end(self, lambda_env_variables, aws_credentials):
-        test_event = {"path": "entity/legacy"}
-        expected_response = create_expected_response(self.test_entity_name)
+        test_event = {"path": "/entity/legacy"}
+        expected_response = json.dumps(create_expected_response(self.test_entity_name))
 
         response = entity_lambda_handler(test_event, {})
 
