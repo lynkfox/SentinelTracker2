@@ -5,28 +5,28 @@ import string
 @mock_dynamodb2
 def create_testing_table(client, table_name, entity_name):
     client.create_table(
-            AttributeDefinitions=[
-                {
-                    'AttributeName': 'pk',
-                    'AttributeType': 'S'
-                },
-                {
-                    'AttributeName': 'sk',
-                    'AttributeType': 'S'
-                },
-            ],
-            TableName=table_name,
-            KeySchema=[
-                {
-                    'AttributeName': 'pk',
-                    'KeyType': 'HASH'
-                },
-                {
-                    'AttributeName': 'sk',
-                    'KeyType': 'RANGE'
-                },
-            ])
-        
+        AttributeDefinitions=[
+            {
+                'AttributeName': 'pk',
+                'AttributeType': 'S'
+            },
+            {
+                'AttributeName': 'sk',
+                'AttributeType': 'S'
+            },
+        ],
+        TableName=table_name,
+        KeySchema=[
+            {
+                'AttributeName': 'pk',
+                'KeyType': 'HASH'
+            },
+            {
+                'AttributeName': 'sk',
+                'KeyType': 'RANGE'
+            },
+        ])
+
     client.put_item(
         TableName=table_name,
         Item={
@@ -51,6 +51,7 @@ def create_testing_table(client, table_name, entity_name):
         }
     )
 
+
 def create_expected_response(entity_name):
     full_name = string.capwords(entity_name.replace('_', ' '))
     return {
@@ -59,4 +60,4 @@ def create_expected_response(entity_name):
         'total_wins': 15,
         'total_losses': 23,
         'total_games': 38
-        }
+    }
