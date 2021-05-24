@@ -39,12 +39,11 @@ class EntityCommands():
             meta_data(Dictionary): The [0] index of the dynamodby Items response.
         '''
         logging.info('[entity_lambda.EntityCommands] - Retrieving Metadata')
-        self.entity_data.update({
-            'display_name': meta_data.get('display_name'),
-            'entity_source': meta_data.get('entity_source'),
-            'total_wins': int(meta_data.get('total_wins')),
-            'total_losses': int(meta_data.get('total_losses'))
-        })
+        for key in meta_data:
+            if key == 'pk' or key == 'sk':
+                continue
+            else:
+                self.entity_data.update({ key: meta_data[key] })
         
         
     def calculate_total_games(self, *args) -> None:
