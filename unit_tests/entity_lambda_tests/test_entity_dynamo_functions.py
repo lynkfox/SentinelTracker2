@@ -3,6 +3,7 @@ import boto3
 from moto import mock_dynamodb2
 import pytest
 from entity_dynamo_functions import EntityCommands
+from unit_tests.mock_aws_services.mock_table_handler import create_testing_table, create_expected_response
 
 @mock_dynamodb2
 class TestEntityDynamoFunctionsWithDynamoActive():
@@ -10,54 +11,9 @@ class TestEntityDynamoFunctionsWithDynamoActive():
     def setup(self):
         self.table_name = "test_table"
         self.client = boto3.client('dynamodb')
-        self.test_entity_name = "baronblade"
+        self.test_entity_name = "baron_blade"
         
-        self.client.create_table(
-            AttributeDefinitions=[
-                {
-                    'AttributeName': 'pk',
-                    'AttributeType': 'S'
-                },
-                {
-                    'AttributeName': 'sk',
-                    'AttributeType': 'S'
-                },
-            ],
-            TableName=self.table_name,
-            KeySchema=[
-                {
-                    'AttributeName': 'pk',
-                    'KeyType': 'HASH'
-                },
-                {
-                    'AttributeName': 'sk',
-                    'KeyType': 'RANGE'
-                },
-            ])
-        
-        self.client.put_item(
-            TableName=self.table_name,
-            Item={
-                'pk': {
-                    'S': f"ENTITY#{self.test_entity_name}"
-                },
-                'sk': {
-                    'S': f'#META#{self.test_entity_name}'
-                },
-                'display_name': {
-                    'S': 'Baron Blade'
-                },
-                'entity_source': {
-                    'S': f'ENTITY#{self.test_entity_name}'
-                },
-                'total_wins': {
-                    'N': '15'
-                },
-                'total_losses': {
-                    'N': '23'
-                }
-            }
-        )
+        create_testing_table(self.client, self.table_name, self.test_entity_name)
         
         self.entity = EntityCommands(self.table_name, self.test_entity_name)
     
@@ -67,12 +23,7 @@ class TestEntityDynamoFunctionsWithDynamoActive():
         del self.client
         
     def test_get_all_entity_returns_full_dictionary_of_all_entities_data(self):
-        expected_result = {
-            'Name': 'Baron Blade',
-            'Entity': "baronblade",
-            "TotalWins": 15,
-            "TotalLosses": 23
-        }
+        expected_result = create_expected_response(self.test_entity_name)
         
         self.entity.get_all_entity_data()
         
@@ -81,7 +32,7 @@ class TestEntityDynamoFunctionsWithDynamoActive():
     def test_get_meta_data_converts_meta_sk_entry_to_dictionary(self):
         result_from_dynamo_0 = {
             'display_name': 'Baron Blade',
-            'entity_source': 'ENTITY#baronblade',
+            'entity_source': 'ENTITY#baron_blade',
             'pk': 'ENTITY#baronblade',
             'sk': '#META#baronblade',
             'total_losses':23,

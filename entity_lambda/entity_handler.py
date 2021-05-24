@@ -1,5 +1,11 @@
 import json
+import os
 from api_helpers import *
+from entity_dynamo_functions import EntityCommands
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 def entity_lambda_handler(event:dict, context:dict) -> dict:
@@ -14,6 +20,26 @@ def entity_lambda_handler(event:dict, context:dict) -> dict:
     '''
     response = create_base_response()
     
+    
+    # Verify Env Variables All Exist
+    try:
+        ENTITY_TABLE = os.environ['TRACKER_DYNAMO']
+    except KeyError as e:
+        logger.critical(f'[entity_lambda_handler] - Missing environment variable {e.args[0]}')
+        
+        if e.args[0]== "TRACKER_DYNAMO":
+            error_code = "ENV0001"
+        
+        response['body'] = json.dumps({
+                                "message": "Service is Temporary Unavailable. Please try again or notify an administrator.",
+                                "error": error_code
+                            })
+        
+        response['statusCode'] = '503'
+        return response
+    
+    
+    
     path = event['path'].split('/')
     
     if len(path) < 2:
@@ -22,7 +48,7 @@ def entity_lambda_handler(event:dict, context:dict) -> dict:
                                 "path": event['path']
                             })
     else:
-        ############function########3
-        pass
+        entity = EntityCommands(ENTITY_TABLE, path[1])
+        response['body'] = json.dumps(entity.entity_data)
     
     return response
