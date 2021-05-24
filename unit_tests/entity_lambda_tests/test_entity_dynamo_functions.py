@@ -92,9 +92,19 @@ class TestEntityDynamoFunctionsWithDynamoActive():
             'display_name': "Baron Blade",
             'entity_source': f'ENTITY#{self.test_entity_name}',
             'total_wins': 15,
-            'total_losses': 23
+            'total_losses': 23,
+            'total_games': 38
             }
         
         self.entity.get_meta_data(result_from_dynamo_0)
         
         assert self.entity.entity_data == expected_result
+        
+    def test_calculate_total_games_correctly_tallies_total_game_amount(self):
+        wins = 15
+        loses = 23
+        
+        self.entity.calculate_total_games(wins, loses)
+        
+        assert self.entity.entity_data['total_games'] == 38
+        
