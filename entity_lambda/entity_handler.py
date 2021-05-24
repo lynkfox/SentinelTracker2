@@ -38,14 +38,16 @@ def entity_lambda_handler(event: dict, context: dict) -> dict:
         response['statusCode'] = '503'
         return response
 
+    logger.info(f"[entity_lambda_handler] - Handler called with {event['path']}.")
     path = event['path'].split('/')
 
-    if len(path) < 2:
+    if len(path) < 3:
         response['body'] = json.dumps({
             "message": "Not Enough Values in request. entity/[name] minium needed",
             "path": event['path']
         })
     else:
+        logger.info(f"[entity_lambda_handler] - Initalizing Search for {path[1]}.")
         entity = EntityCommands(ENTITY_TABLE, path[1])
         response['body'] = json.dumps(entity.entity_data)
 

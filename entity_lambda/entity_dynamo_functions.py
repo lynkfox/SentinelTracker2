@@ -2,6 +2,7 @@ import boto3
 import json
 from botocore.exceptions import ClientError
 from boto3.dynamodb.conditions import Key
+import logging
 
 class EntityCommands():
     def __init__(self, table_name:str, entity:str) -> None:
@@ -23,6 +24,7 @@ class EntityCommands():
             KeyConditionExpression=Key('pk').eq(f'ENTITY#{self.entity_name}')
         )['Items']
         
+        
         # Extract the Various Items belonging to this Entity
         self.get_meta_data(entity_items[0])
         
@@ -36,7 +38,7 @@ class EntityCommands():
         Parameters:
             meta_data(Dictionary): The [0] index of the dynamodby Items response.
         '''
-        
+        logging.info['[entity_lambda.EntityCommands] - Retrieving Metadata']
         self.entity_data.update({
             'display_name': meta_data.get('display_name'),
             'entity_source': meta_data.get('entity_source'),
@@ -49,6 +51,7 @@ class EntityCommands():
         '''
         Quick Sum the Args
         '''
+        logging.info['[entity_lambda.EntityCommands] - Calculating Total Games']
         self.entity_data['total_games'] = sum(list(args))
         
         
