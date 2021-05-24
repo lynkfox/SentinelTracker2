@@ -21,9 +21,8 @@ def entity_lambda_handler(event:dict, context:dict) -> dict:
                                 "message": "Not Enough Values in request. entity/[name] minium needed",
                                 "path": event['path']
                             })
-    
     else:
+        ############function########3
         pass
-        
     
     return response
