@@ -1,5 +1,20 @@
 {
     "python.pythonPath": "venv\\Scripts\\python.exe",
     "python.testing.pytestEnabled": true,
-    "python.envFile": "${workspaceFolder}\\.env"
+    "python.envFile": "${workspaceFolder}\\.env",
+    "python.linting.enabled": true,
+    "python.linting.pycodestyleEnabled": true,
+    "python.formatting.provider": "autopep8",
+    "python.languageServer": "Microsoft",
+    "testExplorer.showOnRun": true,
+    "testExplorer.addToEditorContextMenu": true,
+    "files.watcherExclude": {
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/node_modules/*/**": true,
+        "**/.hg/store/**": true,
+        "**/venv/*/**": true,
+        "**/cdk.out/*/**": true,
+    }
+
 }
